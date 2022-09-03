@@ -1,0 +1,9 @@
+{
+ 
+"utente":"Mauro Castellotti",
+"nome_applicazione":"FIT",
+"path_file":"File_FIT",
+"Server":"localhost",
+"Porta:8080",
+"databaseSqlLite":"Fit.db"
+}

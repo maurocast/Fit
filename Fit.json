@@ -1,0 +1,21 @@
+{ 
+"utente":"Mauro Castellotti",
+"nome_applicazione":"FIT",
+"path_file":"File_FIT",
+"Server":"localhost",
+"Porta":"3001",
+"databaseSqlLite":"Fit.db",
+"_utente":"Mauro Castellotti",
+"_nome_applicazione":"FIT",
+"_path_file":"File_FIT",
+"_Server":"localhost",
+"_Porta":"3001",
+"_databaseSqlLite":"Fit.db",
+"_type" : "fs",
+"_sql" : "readFile",
+"_param" : "Fit.json",
+"_tipofile" : "utf8",
+"_paginaLoad ": "draw.html",
+"_DIRECTORY" : "File_FIT",
+"_DATABASE" : "Fit.db" 
+}

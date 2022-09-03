@@ -1,0 +1,43 @@
+{
+  "name": "fit_v01",
+  "version": "1.0.0",
+  "description": "prova",
+  "main": "static/js/fitServer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node static/js/fitServer.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maurocast/FIT_V01.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/maurocast/FIT_V01/issues"
+  },
+  "homepage": "https://github.com/maurocast/FIT_V01#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "fit-file-parser": "^1.9.3",
+    "fs": "0.0.1-security",
+    "fs-js": "^1.0.6",
+    "geolocator": "^2.1.5",
+    "leaflet": "^1.7.1",
+    "leaflet-draw": "^1.0.4",
+    "leaflet-routing-machine": "^3.2.12",
+    "leaflet-toolbar": "^0.4.0-alpha.2",
+    "leaflet.animatedmarker": "^1.0.0",
+    "mapbox-elevation": "^1.0.0",
+    "passport": "^0.5.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.7.1",
+    "sqlite3": "^5.0.2",
+    "xhr2": "^0.2.1",
+    "xml2js": "^0.4.23",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "google-charts": "^2.0.0"
+  }
+}
