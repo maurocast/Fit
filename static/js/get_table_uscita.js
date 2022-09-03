@@ -52,19 +52,3 @@ async function get_filterData() {
       "onchange='get_table_uscita(dataUscita.value,0)'></input>")
   })
 }
-function fnc_checkfiltered(value, tipo)
-{
-  if (tipo != undefined && value != 'Seleziona:') {
-    if (tipo == 0) {
-      filtered = dc.data_grafico_testata.filter(function (rec) {
-        return rec.data == value
-      })
-    }
-    else {
-      filtered = dc.data_grafico_testata.filter(function (rec) {
-        return rec.tragitto.includes(value)
-      })
-    }
-    return filtered
-  }
-}
