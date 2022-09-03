@@ -1,0 +1,616 @@
+
+/* base */
+.body {
+  background-color: mediumblue;
+  font-family: Arial, Helvetica, sans-serif;
+ 
+}
+ 
+/* Menu principale */
+.div_menu {
+  padding: 0px;
+  width: 100%;
+  display: flex;
+  background-color: lightgray;
+  color: white;
+  text-align: left;  
+  font-size: 26px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  font-weight: bold; 
+  height:8%;    
+}
+.right {
+  right: 0;
+  color: mediumblue;
+  font-size: 13px; 
+}
+/* User */
+.div_logged {
+  font-size: 12px; 
+  border-color: mediumblue;
+  border-style: solid;
+  border-width: 1px;
+  color: mediumblue;
+  padding: 1px;
+  height: 100%;
+}
+
+.div_login {
+  font-size: 12px; 
+  border-color: mediumblue;
+  border-style: solid;
+  border-width: 1px;
+  color: mediumblue;
+  padding: 1px;
+  display: none;
+}
+#P_name , #P_password
+{
+  color:red;
+}
+#name,
+#password {
+  size: "32";
+  padding:0px;
+}
+/* Contenitore Tabelle e grafici Google*/
+.div_container {
+  clear: both; 
+  position: fixed;
+  top: 8%;
+  left:0px;
+overflow: hidden;
+  height: 92%;
+  
+} 
+/* scelta grafico */
+.div_menu_orizzontale {
+  height: 8%;
+  display: flex;
+  background-color: mediumblue;
+  
+  color: white;
+  text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px;
+  vertical-align: middle;
+  text-align: center;
+  position: absolute;
+  top:80%;
+  left:10%;
+  z-index: 10000;
+
+}
+.div_menu_orizzontale:hover {
+  background-color: gainsboro;
+  color: mediumblue;
+}
+.div_menu_orizzontale_layer {
+   
+  display: flex;
+  background-color: mediumblue;
+
+  color: white;
+  text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px;
+  vertical-align: middle;
+  text-align: center;
+ 
+
+}
+
+.div_menu_orizzontale_layer:hover {
+  background-color: gainsboro;
+  color: mediumblue;
+}
+.div_dataselezionata {
+  
+  color: mediumblue;
+  vertical-align: middle;
+  width:150px;
+  text-align: center;
+  margin: auto;
+    width: 50%;
+    padding:10px;
+}
+/* scelta operazioni */
+.div_menu_verticale {
+  height: 100%;
+  background-color: mediumblue;
+  color: white;
+  text-align: left;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 2px;
+  width: 5%;
+}
+ 
+
+ 
+ 
+
+
+#map_table {
+   
+   
+  background-color: gainsboro;
+  position: absolute;
+  top:0px;
+  right:0px;
+  padding:1px;
+  border:1px solid mediumblue;
+  z-index: 100;
+  margin: 2px;
+  color: mediumblue;
+  font-size: 10px;
+}
+ 
+.map {
+  height: 100%;
+  width: 100%;
+  position:relative;
+    z-index: 10;
+} 
+
+.div_visualizzazione {
+  /*position: fixed;*/
+  display: none;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2;
+  cursor: pointer;
+} 
+.Insideoverlay {
+  background-color: white;
+  position: fixed;
+  width: 100%;
+  top: 50px;
+  left: 0;
+  height: 100%;
+  display: flex;
+  border-style: solid;
+  border-width: 1px;
+  border-color: mediumblue;
+}
+/* wait ..*/
+.centerImage {
+  width: 150px;
+  height: 50px;
+  color: mediumblue;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -25px;
+  padding-top:20%;
+  padding-left:50%;
+  
+
+}
+#loader {
+ 
+  width: 150px;
+    height: 50px;
+    color: mediumblue;
+    position: absolute;
+    top: 40%;
+    left: 40%;
+     
+}
+.item_menu {
+  border-style: inset;
+  border-color: white;
+  border-width: 1px;
+  padding: 2px;
+  
+  opacity: 20;
+  margin: 5px;
+  z-index: 10000;
+  position:relative;
+}
+.item_menu:hover {
+  background-color: gainsboro;
+  color: mediumblue;
+}
+
+.item_menu:not(:hover) {
+  color: gainsboro;
+  background-color: mediumblue;
+}
+#ricalcolaMilestones
+{
+  border-style: inset;
+    border-color: white;
+    border-width: 1px;
+    padding: 5px;
+   
+    opacity: 20;
+    margin: 5px;
+    background-color: mediumblue;
+    color: gainsboro;
+}
+.itemV {
+  border-style: inset;
+  border-color: white;
+  border-width: 1px;
+  padding: 5px;
+
+  margin: 5px;
+}
+.itemV:hover {
+  background-color: gainsboro;
+  color: mediumblue;
+}
+
+.itemV:not(:hover) {
+  color: gainsboro;
+  background-color: mediumblue;
+}
+.itemtotali {
+  border-style: inset;
+  border-color: mediumblue;
+  border-width: 1px;
+  padding: 1px;
+  width: 80%;
+  margin: 2px;
+  background-color: white;
+  color: mediumblue;
+  font-weight: bold;
+}
+.item_menu_container{
+width:25%;
+padding-left: 2px;
+padding-top: 5px;
+font-family: Arial,
+Helvetica,
+sans-serif;
+font-size: 12px;
+text-align: left;
+}
+.div_popupMilestone {
+  border-color: mediumblue;
+  border-width: 1px;
+  padding: 1px;
+  margin: 2px;
+  background-color: gainsboro;
+  color: mediumblue;
+  width: 400px;
+  
+}
+
+
+.div_chartheader {
+  position: absolute;
+  top: 10%;
+  padding: 5px;
+  display: block;
+}
+.div_chartdetails {
+  position: absolute;
+  top: 50%;
+  padding: 5px;
+  display: flex;
+}
+#div_chartdetails td {
+  font-size: 12px;
+}
+
+#chart_div_1 tr {
+  outline: thin solid cyan;
+}
+.error {
+  color: red;
+}
+.cssHeaderRow {
+  background-color: #2a94d6;
+}
+
+.cssTableRow {
+  background-color:white
+}
+
+.cssOddTableRow {
+  background-color: gainsboro;
+}
+
+.cssSelectedTableRow {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.cssHoverTableRow {
+  background: azure;
+}
+
+.cssHeaderCell {
+  color: #ffffff;
+  font-size: 12px;
+  padding: 2px !important;
+  border: solid 1px #ffffff;
+  text-align: center;
+}
+
+.cssTableCell {
+  font-size: 12px;
+  padding: 2px !important;
+  border: solid 1px #ffffff;
+  text-align: center;
+}
+
+.cssRowNumberCell {
+  text-align: center;
+}
+
+
+.mapButton{
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 5px;
+    border-color: mediumblue;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    opacity: 0.6;
+    text-align: center;
+    margin:1px;
+    
+}
+.mapButton:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+#LogButton
+{
+  align-items: center;
+    background-color: white;
+    border-radius: 5px;
+    border-color: mediumblue;
+    border-style: solid;
+    border-width: 1px 1px 1px 1px;
+    opacity: 0.6;
+    text-align: center;
+}
+#LogButton:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}
+.leaflet-tooltip {
+  position: absolute;
+  padding: 1px;
+  background-color: #fff;
+  border: 1px solid mediumblue;
+  border-radius: 3px;
+  color: mediumblue;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  opacity: 30%;
+}
+
+.leaflet-tooltip.leaflet-clickable {
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  position: absolute;
+  pointer-events: none;
+  border: 6px solid transparent;
+  background: transparent;
+  content: "";
+}
+
+/* Directions */
+
+.leaflet-tooltip-bottom {
+  margin-top: 6px;
+}
+
+.leaflet-tooltip-top {
+  margin-top: -6px;
+}
+
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+  left: 50%;
+  margin-left: -6px;
+}
+
+.leaflet-tooltip-top:before {
+  bottom: 0;
+  margin-bottom: -12px;
+  border-top-color: #fff;
+}
+
+.leaflet-tooltip-bottom:before {
+  top: 0;
+  margin-top: -12px;
+  margin-left: -6px;
+  border-bottom-color: #fff;
+}
+
+.leaflet-tooltip-left {
+  margin-left: -6px;
+}
+
+.leaflet-tooltip-right {
+  margin-left: 6px;
+}
+
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  top: 50%;
+  margin-top: -6px;
+}
+
+.leaflet-tooltip-left:before {
+  right: 0;
+  margin-right: -12px;
+  border-left-color: #fff;
+}
+
+.leaflet-tooltip-right:before {
+  left: 0;
+  margin-left: -12px;
+  border-right-color: #fff;
+}
+.class-tooltip
+{
+  color:red;
+  border:none;
+  background-color: transparent;
+}
+ 
+.riepilogo {
+
+ 
+  border-collapse: collapse;
+background-color: whitesmoke;
+}
+
+.riepilogo td {
+  
+ 
+  border-collapse: collapse;
+  border: 1px solid  ;
+  padding: 2px;
+  text-align: center;
+}
+
+
+
+.riepilogo th {
+   
+ 
+  border-collapse: collapse;
+  padding: 2px;
+border: 1px solid  ;
+text-align: left;
+}
+#dataUscita
+{
+  font-size: 09px;
+    color: black;
+  font-family: Arial, Helvetica, sans-serif;
+    padding: 2px;
+    text-align: left;
+}
+.div_riepilogo
+{
+  display:flex;
+}
+.PopupHeader
+{
+  background-color: gainsboro;
+    color: mediumblue;
+}
+.PopupButton {
+  background-color: mediumblue;
+  color: gainsboro;
+  border-color: mediumblue;
+  border-style: solid;
+  border-width: 1px;
+  margin: 3px;
+  z-index:5000;
+  display: inline;
+
+} 
+.PopupButton:hover {
+  background-color: gainsboro;
+  color: mediumblue;
+  border-color: mediumblue;
+    border-style: solid;
+    border-width: 1px;
+}
+#filter_div {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+
+  width: 10%;
+  height: 10%;
+  z-index: 200;
+}
+#map_chart_uscita {
+  position: absolute;
+  top: 15%;
+  left: 10%;
+
+  width: 75%;
+  height: 80%;
+  z-index: 100;
+  display:none;
+}
+.home-icon {
+  background-color: mediumblue;
+  color: gainsboro;
+  border-color: mediumblue;
+  border-style: solid;
+  border-width: 1px;
+  margin: 3px;
+ font-size: 12px;
+ font-weight: bold ;
+width:50px;
+text-align: center;
+}
+.circle-icon {
+  background-color: aquamarine;
+  color: mediumblue;
+  border-color: mediumblue;
+  border-style: solid;
+  border-width: 1px;
+  margin: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  width: 200px;
+  text-align: center;
+  opacity: 80%;
+}
+.arrow {
+  
+  border: solid red;
+  border-width: 0 8px 8px 0;
+  display: inline-block;
+  padding: 3px;
+  height: 8px;
+  width:8px;
+}
+.r {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+
+.l {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.u {
+       transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.d {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}

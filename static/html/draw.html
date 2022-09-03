@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <script type="text/javascript" src="/static/js/fitMain.js"></script>
+     <script src="/node_modules/leaflet/dist/leaflet.js"></script>
+</head>
+
+<body id='body' onload='test()'>
+
+    <script>
+        function test() {
+            pr = {}
+            // TODO correggere parametri devono essere tutti sul file Fit.JSON
+            // e iniziare con _
+            // parametri minimi per esecuzione
+            pr._type = "fs";
+            pr._sql = "readFile";
+            pr._param = "Fit.json";
+            pr._tipofile = "utf8";
+            // TODO verificare paginaLOAD
+            load(pr).then(function (result, reject) {
+                pr = JSON.parse(result);
+                // Parametri ricevuti
+                // qui la funzione di testo da lanciare:
+                // nella fase
+            pr._type = "SQL_NODE";
+                load(pr).then(function (result, reject) {
+                
+                })
+            })
+
+
+        }
+
+        function fncTest(pr) {
+            get_fit_salite_test('2020-11-21 08:55:29', '2020-11-21 09:44:43').then
+            // prova()
+        }
+
+
+
+        // da riportare interamente e senza modifiche
+
+
+        function get_fit_salite_test(result) {
+            return new Promise(function (resolve, reject) {
+                pr._type = "SQL_ALL"
+                pr._sql =
+                    "select f.position_lat as lat,f.position_long as lon,e.elevation as el,f.distance as dist," +
+                    " e.elevation - LAG(e.elevation, 1) OVER(ORDER BY timestamp_key) AS disl " +
+                    " from fit as f " +
+                    " left join fit_elevation AS e ON f.position_lat = e.position_lat AND " +
+                    " f.position_long = e.position_long " +
+                    " where timestamp_key between ? and ? "
+                pr._param = [result[0].inizio, result[0].fine];
+
+                fncSQL(pr).then(function (result) {
+                    filtered = []
+                    filtered = result.filter(function (rec, ct) {
+                        if (ct > 0) {
+                            return (ct > 0 && rec.dist > result[ct - 1].dist)
+                        }
+                    })
+                    result = filtered
+                    distanza = 0
+                    // loop result per il grafico
+                    result.forEach(function (el, ct) {
+                        distanza += el.dist
+                        // Aggiungo a itinerario se divisibile per 10
+                        if ((ct % 10) == 0) {
+                            itinerario.push([L.latLng(el.lat, el.lon), distanza, el.el])
+                        }
+                    })
+                    resolve(result)
+                }).then(function (result) {
+                    // aggiorno punti su fit_salite
+                    pr._sql = "Update fit_salita set punti=? where mil_da=? and mil_a=?"
+                    pr._param = [
+                        [JSON.stringify(itinerario), mil_da, mil_a]
+                    ]
+                    pr._type = "SQL_RUN"
+                    return fncRUN(pr)
+                }).then(function(itinerario){
+                    resolve(itinerario)
+                })
+            })
+        }
+            </script>
+</body>
+
+</html>

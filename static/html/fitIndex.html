@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fit</title>
+    <link rel="icon" href="/favicon.ico">
+    <script type="text/javascript" src="/static/js/fitMain.js"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <link rel="stylesheet" href="/node_modules/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="/node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="/static/css/styles.css">
+     <script src="/node_modules/leaflet/dist/leaflet.js"></script>
+    <script src="/node_modules/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<script type="text/javascript" src="/static/js/MovingMarker.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"
+        integrity="sha512-ozq8xQKq6urvuU6jNgkfqAmT7jKN2XumbrX1JiB3TnF7tI48DPI4Gy1GXKD/V3EExgAs1V+pRO7vwtS1LHg0Gw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"
+        integrity="sha512-gc3xjCmIy673V6MyOAZhIW93xhM9ei1I+gLbmFjUHIjocENRsLX/QUE1htk5q1XV2D/iie/VQ8DXI6Vu8bexvQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Load Esri Leaflet from CDN -->
+    <script src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js"
+        integrity="sha512-E0DKVahIg0p1UHR2Kf9NX7x7TUewJb30mxkxEm2qOYTVJObgsAGpEol9F6iK6oefCbkJiA4/i6fnTHzM6H1kEA=="
+        crossorigin=""></script>
+    <!-- Load Esri Leaflet Geocoder from CDN -->
+    <link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder@3.1.3/dist/esri-leaflet-geocoder.css"
+        integrity="sha512-IM3Hs+feyi40yZhDH6kV8vQMg4Fh20s9OzInIIAc4nx7aMYMfo+IenRUekoYsHZqGkREUgx0VvlEsgm7nCDW9g=="
+        crossorigin="">
+    <script src="https://unpkg.com/esri-leaflet-geocoder@3.1.3/dist/esri-leaflet-geocoder.js"
+        integrity="sha512-mwRt9Y/qhSlNH3VWCNNHrCwquLLU+dTbmMxVud/GcnbXfOKJ35sznUmt3yM39cMlHR2sHbV9ymIpIMDpKg4kKw=="
+        crossorigin=""></script>
+</head>
+
+<!-- richiama la function principale al caricamento della pagina       -->
+<body class="body" onload='fitMain()'>
+
+    <!-- Menu                                                           -->
+    <div id="div_menu" class="div_menu">
+        <div id="Importazione" class="item_menu">
+            Importazione</div>
+        <div id="Visualizzazione" class="item_menu">
+            Visualizzazione</div>
+        <div id="Milestones" class="item_menu">
+            Salite</div>
+        <button id="idlogin" class="mapButton">
+            Login
+        </button>
+        <div id="div_logged" class="div_logged">
+            <button id="idlogout" class="mapButton">
+            </button>
+        </div>
+        <div id="div_dataselezionata" class="div_dataselezionata">
+            
+        </div>
+        <!-- Login                                                  -->
+        <div id="div_login" class="div_login" style="display:none">
+            <table>
+                <tr>
+                    <td> <label for="name">Nome:</label>
+                        <span id="P_name">*</span>
+                    </td>
+                    <td> <input id="name"></td>
+                    <td>
+                        <div id="div_logerror" class="error">Errore in autenticazione</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td> <label for="password">Password:</label>
+                        <span id="P_password">*</span>
+                    </td>
+                    <td> <input id="password" type="password" >
+                    </td>
+                    <td><button id="LogButton">login</button></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- tabella iniziale  file fit_tes                                 -->
+    <div id="div_container" class="div_container">
+    </div>
+
+    <!-- Popup Milestone                                                -->
+    <div id="div_popupMilestone" class="div_popupMilestone" style="display:none">
+        <label>Nuovo Milestone</label>
+        <br />
+        <label id="lblCoordinate"></label>
+        <table>
+            <tr>
+                <th>Milestone:</th>
+                <th>Indirizzo e Localita</th>
+                <th>Raggio in m.</th>
+            </tr>
+            <tr>
+                <td><input type="text" id="indirizzo" name="indirizzo" style="width: 120px;"></td>
+                <td><input type="text" id="city" name="city" style="width: 120px;"></td>
+                <td><input type="text" id="radius" name="radius" style="width: 20px;"></td>
+            </tr>
+        </table><br />
+        <button type="button" id="buttonNuovoMilestone">Invio</button>
+    </div>
+    <!--                                                                -->
+
+    <!-- Popup Milestone visualizzazione itinerari e dati               -->
+    <div id="div_popupNuovoMilestone" style="display:none">
+        id:<label id="id_l"></label> Lat: <label id="lat_l"></label> Lon: <label id="lon_l"></label>
+        <br />
+        <label id="indirizzo_l"></label> <label id="city_l"></label>
+        <br />
+        altitudine: <label id="altitude_l"></label> mt.
+        <div id="div_l" style="width:400px"></div>
+        <br />
+        <table>
+            <th>
+            <td>Dislivello</td>
+            </th>
+            <tr>
+                <td id="dislivello"></td>
+
+            </tr>
+        </table>
+        <button type="button" id="buttonNuovoMilestone">Invio</button>
+
+    </div>
+    <!--                                                                -->
+
+    <!-- Map e tabella uscite                                           -->
+    <div id="div_visualizzazione" class="div_visualizzazione">
+        <div class="Insideoverlay">
+            <!-- Pane for popup di map                                                    -->
+            <div id="map_table">
+            </div>
+            <!-- Map e visualizzazione wait                                                    -->
+            <div id="map_div" class="map">
+
+                <div id="map_table_charts" class="map_table_charts">
+                   
+                    <div id="div_menu1" >
+                          <!--  
+                        <div id="ricalcolaMilestones" class="item_menu">Ricalcola</div>
+                     <div id="Altimetria" class="item_menu">Altimetria</div>
+                     <div id="ChiudiMap" class="item_menu">Chiudi</div>
+                   
+                    -->
+                     </div>
+                </div>
+            </div>             
+        </div>
+    </div>
+    <!--Div that will hold the dashboard-->
+    <div id="dashboard_div" style="display:none">
+                 <!--Divs that will hold each control and chart-->
+                 <div id="filter_div" class="filter_div">
+                    <select id="selectAlt">
+                        <option value=300>300></option>
+                        <option value=600>600</option>
+                        <option value=900>900</option>
+                        <option value=1200>1200</option>
+                    </select>
+                 </div>
+                <div id="map_chart_uscita"></div>
+    </div>
+              
+</body>
+</html>

@@ -1,0 +1,263 @@
+html
+,address,
+blockquote,
+body,dd, div,
+dl, dt, fieldset, form,
+frame, frameset,
+h1, h2, h3, h4,
+h5, h6, noframes,
+ol, p, ul, center,
+dir, hr, menu, pre   { display: block; 
+        unicode-bidi: embed;
+    border-color: #394A57; }
+li              { display: list-item }
+head            { display: none }
+table           { display: table }
+tr              { display: table-row }
+thead           { display: table-header-group }
+tbody           { display: table-row-group }
+tfoot           { display: table-footer-group }
+col             { display: table-column }
+colgroup        { display: table-column-group }
+td, th          { display: table-cell }
+caption         { display: table-caption }
+th              { font-weight: bolder; text-align: center }
+caption         { text-align: center }
+
+h1              { font-size: 2em; margin: .67em 0; padding-left: 20px; }
+h2              { font-size: 1.5em; margin: .75em 0; padding-left: 20px; }
+h3              { font-size: 1.17em; margin: .83em 0 }
+h4, p,
+blockquote, ul,
+fieldset, form,
+ol, dl, dir,
+menu            { margin: 1.12em 0 }
+h5              { font-size: .83em; margin: 1.5em 0 }
+h6              { font-size: .75em; margin: 1.67em 0 }
+h1, h2, h3, h4,
+h5, h6, b,
+strong          { font-weight: bolder }
+blockquote      { margin-left: 40px; margin-right: 40px }
+i, cite, em,
+var, address    { font-style: italic }
+pre, tt, code,
+kbd, samp       { font-family: monospace }
+pre             { white-space: pre }
+button, textarea,
+input, select   { display: inline-block }
+big             { font-size: 1.17em }
+small, sub, sup { font-size: .83em }
+sub             { vertical-align: sub }
+sup             { vertical-align: super }
+table           { border-spacing: 2px;
+                border: 1px; }
+thead, tbody,
+tfoot           { vertical-align: middle }
+td, th, tr      { vertical-align: inherit;
+                }
+s, strike, del  { text-decoration: line-through }
+hr              { border: 1px inset }
+ol, ul, dir,
+menu, dd        { margin-left: 40px }
+ol              { list-style-type: decimal }
+ol ul, ul ol,
+ul ul, ol ol    { margin-top: 0; margin-bottom: 0 }
+u, ins          { text-decoration: underline }
+br:before       { content: "\A"; white-space: pre-line }
+center          { text-align: center }
+:link,
+:visited {
+	text-decoration: none;
+	color: gray
+}
+:focus          { outline: thin dotted invert }
+
+/* Begin bidirectionality settings (do not change) */
+BDO[DIR="ltr"]  { direction: ltr; unicode-bidi: bidi-override }
+BDO[DIR="rtl"]  { direction: rtl; unicode-bidi: bidi-override }
+
+*[DIR="ltr"]    { direction: ltr; unicode-bidi: embed }
+*[DIR="rtl"]    { direction: rtl; unicode-bidi: embed }
+
+@media print {
+  h1            { page-break-before: always }
+  h1, h2, h3,
+  h4, h5, h6    { page-break-after: avoid }
+  ul, ol, dl    { page-break-before: avoid }
+}
+
+
+.doc_menu/** ok */
+{
+	width:100%;text-align: center;background-color: #394A57;font-size: 20px;
+	font-weight:bolder;vertical-align: middle;color: gray;text-align:center;
+	display: flex;top: 46px;display: flex;
+}
+.doc_menu_close/** ok */
+{
+	float: right;
+}
+.doc_selected_page/** ok */
+{
+	width:30%;background-color:gainsboro ;font-size: 20px;
+	font-weight: bolder;vertical-align: middle;text-align:left;
+	color: gray;height: 10000px;flex:2;
+	
+}
+
+
+.doc_selected_page_testo_h3
+
+/** ok */
+	{
+	margin-left: 15px;
+	line-height: 10px;
+	font-size: 12px;
+	margin-top: 1px;
+	margin-bottom: 2px;
+} 
+    
+  
+
+ 
+
+table, th, td {
+  border: 1px solid #394A57 ;
+  border-collapse: collapse;
+  
+} 
+
+
+
+
+
+.doc_body
+
+/** ok */
+	{
+	font-family: "Arial", "Verdana", "Sans-Serif";
+	font-weight: normal;
+	font-size: 10px;
+	background-color: whitesmoke;
+	margin: 0%;
+	text-align: center;
+}
+.doc_header
+
+/** ok */
+	{
+	background-color: mediumblue;
+	font-size: 40px;
+	font-weight: bolder;
+	vertical-align: middle;
+	color: white;
+	height: 45px;
+	width: 100%;
+}
+.doc_selected_page_testo
+/** ok */
+	{
+	width: 70%;
+	background-color: whitesmoke;
+	font-size: 20px;
+	font-weight: bolder;
+	vertical-align: middle;
+	text-align: left;
+	color: black;
+	height: 100%;
+	word-wrap: break-word;
+	font-family: "Arial";
+	flex: 10;
+
+}
+.orgNodeClass {
+	text-align: center;
+	vertical-align: middle;
+	font-family: arial, helvetica;
+	cursor: default;
+	border: 1px none mediumblue;
+	border-width: thin;
+	background-color: whitesmoke;
+	font-size: 10px;
+	font-weight: bold;
+	border-radius: 10px;
+	color: mediumblue;
+	opacity: 60%;
+	padding: 10px;
+}
+
+.orgSelectedNodeClass {
+	background-color: mediumblue;
+	text-align: center;
+	vertical-align: middle;
+	font-family: arial,
+		helvetica;
+	cursor: default;
+	border: 1px none gray;
+	font-size: 10px;
+	font-weight: normal;
+	border-radius: 10px;
+	color: white;
+}
+
+.tooltipOrg {
+	color: white;
+	font-style: italic;
+	font-size: 10px;
+}
+.doc_selected_page_testo_h1
+
+/** ok */
+	{
+	margin-left: 5px;
+	padding-bottom: 15px;
+	border-color: blue;
+	border-width: 1px;
+	background-color: whitesmoke;
+	width: 700px;
+	height: auto;
+	position: fixed;
+	top: 300px;
+
+
+
+}
+.doc_selected_page_testo_h2
+
+/** ok */
+	{
+	margin-left: 5px;
+	padding-bottom: 15px;
+	border-color: blue;
+	border-width: 1px;
+	background-color: whitesmoke;
+	width: 700px;
+	height: 700px;
+	overflow: auto;
+	position: fixed;
+	top: 330px;
+
+
+
+}
+#org
+{
+position: fixed;
+	/* Sit on top of the page content */
+	display: block;
+	/* Hidden by default */
+	width: 100%;
+	/* Full width (cover the whole page) */
+	height: 100%;
+	/* Full height (cover the whole page) */
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	/* Black background with opacity */
+	z-index: 2000;
+	/* Specify a stack order in case you're using a different order for other elements */
+	cursor: pointer;
+	/* Add a pointer on hover */
+}
