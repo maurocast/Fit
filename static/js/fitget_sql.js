@@ -1,3 +1,6 @@
+        /**
+        * Routine di gestione sql
+        */
 var sqlite3 = require("sqlite3").verbose();
 var crypto = require("crypto");
 module.exports = { fncSQL, hashPassword, fncRUN };
@@ -42,6 +45,10 @@ function hashPassword(param) {
         }
     });
 }
+/**
+ * Connessione
+*/
+/* sqllite */
 function _db(pr) {
 
     let db = new sqlite3.Database(pr._DATABASE, function (err) {
@@ -51,6 +58,7 @@ function _db(pr) {
     });
     return db;
 }
+
 
 function fncRUN(pr) {
     return new Promise(function (resolve, reject) {

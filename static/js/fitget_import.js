@@ -1,83 +1,87 @@
-// importazione dati da file binario Brython a db sqlite
-// generazione archivi Fit
-// main importazione
+            /**
+             *  importazione dati da file binario Brython a db  
+                generazione archivi Fit
+                main importazione
+            * */ 
 async function get_import() {
-    // files presenti nella Directory
-    result = await get_files_in_directory(pr);
+    /*
+        files presenti nella Directory
+    */ 
+    function get_files_in_directory(pr) {
+        return new Promise(async function (resolve, reject){
 
-    // esecuzione importazione files non presenti sul fit_tes
-    filesDirectory = result.sort().reverse();
-    len = filesDirectory.length;
-    contatore = 0;
-    while (contatore < len) {
-        // fileEsistenti
-        pr._filename = filesDirectory[contatore];
-        Filespassati = await get_files_passati(pr);
-        // file non trovato sull'archivio
-        if (Filespassati.length == 0) {
-            // read file e trasferisci db
-            // return data del file
-            data = await get_import_file_bin(pr);
-        }
-        contatore += 1;
-    }
-}
-// vengono selezionati tutti ii files della directory
-// se +è stato impostato il singolo file viene selezionato quello
-async function get_files_in_directory(pr) {
-    pr._type = "fs";
-    pr._sql = "readdir";
-    pr._param = pr._DIRECTORY;
-    let filesDirectory = await load(pr);
-    filtered = []
-    if ((pr._fileDaElaborare != "") && (pr._fileDaElaborare != undefined)) {
-        filtered = filesDirectory.filter(function (rec) {
-            return rec.includes(pr._fileDaElaborare)
+            pr._type = "fs";
+            pr._sql = "readdir";
+            pr._param = pr._DIRECTORY;
+            let filesDirectory = await load(pr);
+            /**
+             * solo se richiesto uno specifico file
+             */
+            filtered = []
+            if ((pr._fileDaElaborare != "") && (pr._fileDaElaborare != undefined)) {
+                filtered = filesDirectory.filter(function (rec) {
+                    return rec.includes(pr._fileDaElaborare)
+                })
+            }
+            else {
+                filtered = filesDirectory.sort().reverse()
+            }
+            /**
+             * Tutti i nomidi files elaborati
+             */
+        
+            pr._sql = "SELECT file FROM fit_tes";
+            pr._type = "SQL_ALL";
+            pr._param = [];
+            await load(pr)
+                .then(function (result) {
+                    arResult = []
+                    result.forEach(function(i)
+                    {
+                        arResult.push(i.file)
+                    })
+                    result.sort().reverse()
+                    filtered = filesDirectory.filter(function (rec) {
+                        return !arResult.includes(rec)
+                    })
+                })
+                
+            // elimino il parametro con il file singolo per evitare venga rielaborato
+            pr._fileDaElaborare = ""
+            /**
+             * Contiene l'array di tutti i file da elaborare oppure
+             * solo quello richiesto
+             */
+            resolve(filtered.sort().reverse())
         })
     }
-    else {
-        filtered = filesDirectory
-    }
-    // elimino il parametro con il file singolo per evitare venga rielaborato
-    pr._fileDaElaborare = ""
-    return filtered;
-}
-// selezione dati di testata dei file già passati
-// ritorna un array 
-async function get_files_passati(pr) {
-    pr._sql = "SELECT * FROM fit_tes where file=?";
-    pr._type = "SQL_ALL";
-    pr._param = pr._filename;
-    let files_passati = await load(pr);
-    return files_passati;
-}
-// routine effettiva di importazione dei files
-// server
-async function get_import_file_bin(pr) {
-    pr._type = "fs";
-    pr._sql = "get_import_file_bin";
-    pr._tipofile = "";
-    pr._param = pr._DIRECTORY + "/" + pr._filename;
-    let data = await load(pr);
-    return data;
-}
-// funzione di lancio sul server
-function xxload(pr) {
-    let XHR;
-    XHR = new XMLHttpRequest();
-    return new Promise(function (resolve, reject) {
-        XHR.addEventListener("load", function (event) {
-            {
-                // funzione riuscita ritorna il risultato
-                resolve(JSON.parse(XHR.responseText));
+    get_files_in_directory(pr)
+    .then(async function (result) {
+        // esecuzione importazione files non presenti sul fit_tes
+        filesDirectory = result;
+        len = filesDirectory.length;
+        contatore = 0;
+        while (contatore < len) {
+            pr._filename = filesDirectory[contatore];
+            // read file e trasferisci db
+            // return data del file
+            // routine effettiva di importazione dei files
+            // server
+            function get_import_file_bin(pr) {
+                return new Promise(async function (resolve, reject) {
+                    pr._type = "fs";
+                    pr._sql = "get_import_file_bin";
+                    pr._tipofile = "";
+                    pr._param = pr._DIRECTORY + "/" + pr._filename;
+                    let data = await load(pr);
+                    resolve(data)
+                })
             }
-        });
-        XHR.addEventListener("error", function (event) {
-            // errore nell'esecuzione
-            reject("Errore codice = " + XHR.status);
-        });
-        // preparazione stringa per il Server
-        XHR.open("POST", pr._paginaLoad + "|" + JSON.stringify(pr));
-        XHR.send();
-    });
+            await get_import_file_bin(pr)
+                .then(function (result) {                        
+            })
+        contatore += 1;
+        } 
+        console.log("Fine importazione")   
+    })
 }

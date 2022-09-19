@@ -1,43 +1,121 @@
-//
-// server per l'applicazione Fit
-//
-
-// Assegnazione porta server 3001
-port = impostaPorta();
-//
+        /**
+        * Server per l'applicazione Fit
+        */
+/**
+ * moduli dell'applicazione server
+ */
 
 var http = require('http');
 var url = require('url');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-
+/**
+ * moduli dell'applicazione da altri js
+ */
 var _fs = require("./fitget_fs");
-var _sql = require("./fitget_sql");
+var _sql = require("./fitgetpg_sql");
 var _usr = require("./fitget_user");
 var _com = require("./fitget_itinerario");
 var _imp = require("./importFile");
-
-//var _imp = require("./fitimportFile");
-// Main
+/***
+ * creazione del server http
+ */
 var server = http.createServer(function (req, res) {
-    // eventualmente con parametro
+    /**
+     * verifico se viene passato un parametro
+     */
     var pr = url.parse(req.url, true).query;
-     
-    // stringa queryObject != ''
+    /** stringa queryObject != '' */
     if (Object.keys(pr).length === 0)
     {
-        Object.create(pr)
-        // verifico pagina
+        pr = {}
+        pr._param = "Fit.json";
+        pr._tipofile = "utf8";
+        _fs.fnc_readFile(pr)
+            .then(function (result) {
+                 pr = JSON.parse(result)
+            
+        /**
+        * modifica la pagina richiesta ( "/" oppure no-html)
+        * */
+        function decodeRequest(request) {
+            /**
+             * controllo se la richiesta è:
+             * vuota,oppure è quella indicata in pr._paginaLoad( fit.json)
+             * */
+            _request = ["/", pr._paginaLoad, pr._paginaLoad.replace(".html", "")];
+            /* ritrovo l'indice nella array */
+            index = _request.indexOf(request.url);
+            /**
+             * se non è tra i tipi indicati riporto la pagina
+             * */
+            if (index == -1) {
+                return request.url;
+                /**
+                 * Altrimenti riporto la pagina di Load
+                 */
+            } else {
+                return pr._pagineRequest[index];
+            }
+        }
         _url = decodeRequest(req);
-        // content-type
+        /**
+        * determinazione content-type
+         * */
+        function contentType(url) {
+            /* prendo la parte finale dell url */
+            suffissoUrl = url.split(".");
+            /* ritrovo l'indice nella array */
+            index = pr._suffissoUrl.indexOf(suffissoUrl[suffissoUrl.length - 1]);
+            /* se non è tra i tipi indicati imposto text/javascript */
+            if (index == -1) {
+                return "text/javascript";
+            } else {
+                return pr._contentType[index];
+            }
+        }
         _type = contentType(_url);
-        // positione del file
+        /**
+        * ricerca cartella del file
+        * */
+        function positionFile(url) {
+            /* prendo la parte finale dell url */
+            suffissoUrl = url.split(".");
+            /* ritrovo l'indice nella array */
+            index = pr._suffissoUrl.indexOf(suffissoUrl[suffissoUrl.length - 1]);
+            /* se non è tra i tipi indicati imposto "" */
+            if (index == -1) {
+                return "";
+            } else {
+                /* se il file contiene gia il folder */
+                if ((url.startsWith("/" + pr._folder[index]))
+                    ||
+                    /* oppure se sta richiamando da node_modules */
+                    (url.startsWith("/" + "node_modules")))
+        /* imposto "" */ { pr._folder[index] = "" }
+                return pr._folder[index];
+            }
+        }
         _fileFolder = positionFile(_url);
-        // Invio dei files
-        sendFileContent(res, _fileFolder, _url.toString().substring(1),pr);
+        /**
+        * invio al browser e segnalazione errori
+        * */
+        function sendFileContent(response, fileFolder, fileName, pr) {
+            // lettura del file dalla cartella
+            pr._param = fileFolder + fileName;
+            pr._tipofile = ""
+            _fs.fnc_readFile(pr).then(function (result) {
+                response.writeHead(200, { "Content-Type": contentType(fileName), });
+                response.write(result);
+                response.end();
+            });
+        } 
+                sendFileContent(res, _fileFolder, _url.toString().substring(1), pr);
+        })
     }
-    // eseguo le routine richieste
-    else
-     
+    /**
+     * eseguo le routine richieste
+     * */ 
+    else     
         pr = JSON.parse(decodeURI(url.parse(req.url, true).search).substring(1)) 
     {
     // lettura file
@@ -46,6 +124,12 @@ var server = http.createServer(function (req, res) {
         _fs.fnc_readFile(pr).then(function (result) {
             returnLoad(JSON.stringify(result), res)
         });
+    }
+    // lettura file line by line
+    else if (pr._type == "fs" && pr._sql == "readFilelineByline") {
+        _fs.fnc_readFilelineByline(pr).then(function (result) {
+            returnLoad(JSON.stringify(result), res);
+        })
     }
     // lettura directory
     else if (pr._type == "fs" && pr._sql == "readdir") {
@@ -71,6 +155,12 @@ var server = http.createServer(function (req, res) {
             returnLoad(JSON.stringify(result), res);
         })
     } 
+    // ritorna solo la prima riga
+    else if (pr._type == "SQL") {
+        _sql.fncSQL(pr._sql, pr._param).then(function (result) {
+            returnLoad(JSON.stringify(result[0]), res);
+        })
+    }
     // esegue funzione
     else if (pr._type == "SQL_RUN") {
         _sql.fncRUN(pr).then(function (result) {
@@ -79,6 +169,28 @@ var server = http.createServer(function (req, res) {
     } 
     // Request per elevation
     else if (pr._type == "REQUEST") {
+        function get_elev(latlon) {
+
+            let XHR;
+            XHR = new XMLHttpRequest();
+            return new Promise(function (resolve, reject) {
+                XHR.addEventListener("load", function (event) {
+                    {
+                        //  console.log(XHR.responseText)
+                        resolve(JSON.parse(XHR.responseText));
+                    }
+                });
+                XHR.addEventListener("error", function (event) {
+                    reject("Errore codice = " + XHR.status);
+                });
+
+
+                XHR.open("get", "https://api.opentopodata.org/v1/eudem25m?locations=" +
+                    latlon, true);
+
+                XHR.send();
+            });
+        }
         get_elev(pr._param).then(function (result) {
         pr._param = ""
         returnLoad(JSON.stringify(result), res);
@@ -89,164 +201,34 @@ var server = http.createServer(function (req, res) {
         _com.get_itinerario(pr).then(function (result) {
             returnLoad(JSON.stringify(result), res);
         })
-    }
-  
+    }  
     // promise risolta,invio al browser
-        function returnLoad(result, response) {
+    function returnLoad(result, response) {
         //  ritorna i dati alla funzione load
         response.write(result);
         response.end();
     }
-    } 
-
-    
-});    
-server.listen(port);
-// server avviato
-console.log("Server avviato su porta: " + port);
-//
-// Imposta porta
-function impostaPorta() {
-    let port = process.env.PORT;
-    if (port == null || port == "") {
-        port = 3000;
-    }
-    return port;
-}
-// modifica la pagina richiesta ( "/" oppure no-html)
-function decodeRequest(request) {
-    // controllo se la richiesta è: 
-    // vuota,oppure fitIndex
-    _request = ["/", "/fitIndex"];
-    _requestURL = ["/fitIndex.html", "/draw.html"]
-    // ritrovo l'indice nella array
-    index = _request.indexOf(request.url);
-    // se non è tra i tipi indicati imposto text/javascript
-    if (index == -1) {
-        return request.url;
-    } else {
-        return _requestURL[index];
     }    
-}
-// determinazione content-type
-function contentType(url) {
-    _suffissoUrl = ["html", "css", "ico", "jpg", "png", "gif", "svg", "js"];
-    _contentType = [
-        "text/html",
-        "text/css",
-        "image/x-icon",
-        "image/x-icon",
-        "image/x-icon",
-        "image/x-icon",
-        "image/svg+xml",
-        "text/javascript",
-    ];
-    // prendo la parte finale dell url
-    suffissoUrl = url.split(".");
-    // ritrovo l'indice nella array
-    index = _suffissoUrl.indexOf(suffissoUrl[suffissoUrl.length - 1]);
-    // se non è tra i tipi indicati imposto text/javascript
-    if (index == -1) {
-        return "text/javascript";
-    } else {
-        return _contentType[index];
-    }
-}
-// invio al browser e segnalazione errori
-function sendFileContent(response,fileFolder, fileName,pr) {
-    // lettura del file dalla cartella
-    pr._param = fileFolder + fileName;
-    pr._tipofile = ""
-    _fs.fnc_readFile(pr).then(function (result) {
-        response.writeHead(200, { "Content-Type": contentType(fileName), });
-        response.write(result);
-        response.end();
-    });
-} 
-// ricerca cartella del file
-function positionFile(url) {
-    // tipo dile
-    _suffissoUrl = ["html",  "ico", "jpg", "png", "gif", "svg", "js"];
-    // folder
-    _folder = ["static/html/",  "static/images/", "static/images/", "static/images/", "static/images/", "static/images/", "static/js/"]
-    // prendo la parte finale dell url
-    suffissoUrl = url.split(".");
-    // ritrovo l'indice nella array
-    index = _suffissoUrl.indexOf(suffissoUrl[suffissoUrl.length - 1]);
-    // se non è tra i tipi indicati imposto text/javascript
-    if (index == -1) {
-        return "";
-    } else {
-        // se il file contiene gia il folder
-        if ((url.startsWith("/" + _folder[index])) 
-        ||
-        (url.startsWith("/" + "node_modules")))
-        { _folder[index] = "" }    
-        return _folder[index];
-    }
-}
-// esecuzione delle funzioni richieste
-function elaborazioni(pr,res)
-{
-    return new Promise(function (resolve, reject) {
-     
-   
-    
-   
-    // lettura file line by line
-     if (pr._type == "fs" && pr._sql == "readFilelineByline") {
-        _fs.fnc_readFilelineByline(pr).then(function (result) {
-            promiseResolved(result, response);
-        })
-    }
-     
-    
-    
-    // ritorna solo la prima riga
-    if (pr._type == "SQL") {
-        _sql.fncSQL(pr._sql, pr._param).then(function (result) {
-            promiseResolved(result[0], response);
-        })
-    }
-    
-    // esegue funzione
-    else if (pr._type == "SQL_RUN") {
-       _sql.fncRUN(pr._sql, pr._param);
-        promiseResolved(result, response).then(function (result) {
-            promiseResolved(result, response);
-        })    
+});
+/**
+ * Assegnazione porta server da file fit.json
+ * */
+function AssegnaPorta(server){
+    pr = {}
+    pr._param = "Fit.json";
+    pr._tipofile = "utf8";
+    _fs.fnc_readFile(pr)
+    .then(function (result) {
+        pr = JSON.parse(result)
+        let port = process.env.PORT;
+        if (port == null || port == "") {
+            port = pr._Porta;
         }
-    
-
-    
-    // promise in errore,invio al browser
-    function promiseRejected(Error, response) {
-        response.write(JSON.stringify(Error));
-        response.end();
-    }
-    
-    });
-   
-}
-function get_elev(latlon) {
-
-    let XHR;
-    XHR = new XMLHttpRequest();
-    return new Promise(function (resolve, reject) {
-        XHR.addEventListener("load", function (event) {
-            {
-                //  console.log(XHR.responseText)
-                resolve(JSON.parse(XHR.responseText));
-            }
-        });
-        XHR.addEventListener("error", function (event) {
-            reject("Errore codice = " + XHR.status);
-        });
-
-
-        XHR.open("get", "https://api.opentopodata.org/v1/eudem25m?locations=" +
-            latlon, true);
-
-        XHR.send();
+        /**
+         * esecuzione listen
+         */
+        server.listen(port);
+        console.log("Server http avviato su porta: " + port);
     });
 }
+AssegnaPorta(server)

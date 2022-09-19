@@ -1,10 +1,10 @@
-    /*
-        Visualizzazione percorsi uscita.
+        /**
+        *  Visualizzazione percorsi uscita.
             Viene eseguita con due pararmetri: Il valore e il tipo
             tipo=0 data
             tipo=1 milestone
             per effettuare i filtri
-    */
+        */
 async function fitget_uscite(value, tipo) {
     /*
         impostazioni google per tabella
@@ -12,35 +12,33 @@ async function fitget_uscite(value, tipo) {
     google.load("visualization", "1", { packages: ["table"] });
     /*
         reperimento dati da db - get_fit_tes - testata movimenti.
+        ordine per data uscita descend
     */ 
     async function get_fit_tes() {
         return new Promise(function (resolve, reject) {
             pr._type = "SQL_ALL";
-            pr._sql = "select * from fit_tes order by data desc";
+            /* order by data desc */
+            pr._sql = "select * from get_fit_tes";
             pr._param = [];
             load(pr).
                 then(function (result) {
                     resolve(result)
                 })
-                .catch(err => alert("errore selezione fit_tes"))
+                .catch(function (err){
+                    alert("errore routine get_fit_tes")
+                })
         })
     };
     fit_tes = await get_fit_tes()
     /*
-        elaborazione tabella
+        elaborazione tabella per dati 
     */ 
-    async function tabellaTestata(fit_tes) {
-    /*
-        definizione dati - header
-    */ 
+    async function tabellaTestata(fit_tes, value, tipo) {
+    /* definizione dati - header */ 
     var data = new google.visualization.DataTable();
-    /*
-        campo hidden timestamp
-    */
+    /* campo hidden timestamp */
     data.addColumn({ type: "date", label: "" }) 
-    /*
-        data in formato string e filtro
-    */
+    /* impostazione data-filtro */
     async function get_filterData() {
         return new Promise(function (resolve, reject) {
             resolve("<input type='date' id='dataUscita' name='dataUscita'  " +
@@ -73,7 +71,7 @@ async function fitget_uscite(value, tipo) {
                     s += "</select > ";
                     resolve(s)
                 })
-                .catch(err => alert("errore"))
+                .catch(err => alert("errore selezione milestone"))
         })
     }
     filterMilestone = await get_filterMilestone()
@@ -110,6 +108,7 @@ async function fitget_uscite(value, tipo) {
     */
     fit_tes.forEach(function (item) {
         data.addRow([
+            /** elaboro la data ricevuta in formato text ( view ) */
             fnc_data(item.data, "d"), // data
             fnc_data(item.data, "s"), // stringa data
             item.tragitto,            // tragitto
@@ -140,9 +139,11 @@ async function fitget_uscite(value, tipo) {
     };    
     table.draw(view, options);
     /**
-    *    evento seleziona
+    *    evento seleziona visualizza la map e tutti i layers 
+    *   associati con menu per la scelta
     */ 
-    function selectTableTestata(e) {
+        function selectTableTestata(e) {
+        
         /**
         *   riga relativa alla selezione
         */
@@ -154,7 +155,7 @@ async function fitget_uscite(value, tipo) {
         var map = new L.map("map_div")
         removeLayersFromMap(map) 
         /**
-         * Attesa
+         * Attesa ( con z-indez minore della map)
          */
         fnc_wait("map_div")           
         /**
@@ -177,13 +178,14 @@ async function fitget_uscite(value, tipo) {
                         .then(function (result) {
                             resolve(result)
                         })
-                        .catch(err => alert("errore"))
+                        .catch(function (err) {
+                            alert("errore")
+                        })
                 })
             }
-            get_fit = await get_fit(riga_selezionata.data)
+            get_fit = await get_fit(riga_selezionata.data.substr(0, 10))
             /**
              * Elaborazione polyline
-             * @param {*} get_fit 
              * @param {*} map 
              * @returns polyline
              */
@@ -212,46 +214,48 @@ async function fitget_uscite(value, tipo) {
                     e.latlng.lat.toFixed(5) + ", " + e.latlng.lng.toFixed(5)
                 document.getElementById("buttonNuovoMilestone").
                     addEventListener("click", function () {
-                    /*
-                        creazione di un nuovo milestone 
-                    */
-                    async function scrivi_record_milestone(lat, lng, altitude) {
-                                /*
-                                * effettuo la request sul server per reperire l'altitudine
-                                * del punto sul quale viene creto il milestone
-                                * function get_elev
-                                */
-                                pr._type = "REQUEST";
-                                pr._param = lat + "," + lng + "|"
-                                load(pr)
-                                    .then(function (result) {
-                                        if (result.status != 'INVALID_REQUEST') {
-                                            altitude = Math.round(result.results[0].elevation)
-                                        }
-                                        else { altitude = 0 }
-                                        /*
-                                            Scrivo il record su fit_milesone
-                                            */
-                                        function scrivi_record_milestone(lat, lng, altitude) {
-                                            return new Promise(function (resolve, reject) {
-                                                pr._type = "SQL_RUN";
-                                                pr._sql = "insert into fit_milestone (lat,lon,indirizzo,city,radius,altitude) " +
-                                                    " values(?,?,?,?,?,?)"
-                                                // passo nei parametri i dati per il nuovo milestone
-                                                pr._param = [[lat, lng, document.getElementById("indirizzo").value,
-                                                    document.getElementById("city").value, document.getElementById("radius").value, altitude]]
-                                                load(pr).then(function (result) {
-                                                    resolve(result)
-                                                })
-                                            })
-                                        }
-                                    })
-                    }
-                        scrivi_record_milestone(e.latlng.lat, e.latlng.lng, altitude)
-                        .then(function (result) {
-                            map.closePopup();
-                        })
+                /*
+                    creazione di un nuovo milestone 
+                */
+                async function scrivi_record_milestone(lat, lng, altitude) {
+                /*
+                * effettuo la request sul server per reperire l'altitudine
+                * del punto sul quale viene creto il milestone
+                * 
+                */
+                pr._type = "REQUEST";
+                pr._param = lat + "," + lng + "|"
+                load(pr)
+                    .then(function (result) {
+                        if (result.status != 'INVALID_REQUEST') {
+                            altitude = Math.round(result.results[0].elevation)
+                        }
+                        else
+                        { altitude = 0 }
+                        
                     })
+    }
+                    /*
+                        Scrivo il record su fit_milesone
+                    */
+                    function scrivi_record_milestone(lat, lng, altitude) {
+                            return new Promise(function (resolve, reject) {
+                                pr._type = "SQL_RUN";
+                                pr._sql = "insert into fit_milestone (lat,lon,indirizzo,city,radius,altitude) " +
+                                    " values(?,?,?,?,?,?)"
+                                // passo nei parametri i dati per il nuovo milestone
+                                pr._param = [[lat, lng, document.getElementById("indirizzo").value,
+                                    document.getElementById("city").value, document.getElementById("radius").value, altitude]]
+                                load(pr).then(function (result) {
+                                    resolve(result)
+                                })
+                            })
+                    }
+                    scrivi_record_milestone(e.latlng.lat, e.latlng.lng, 0)
+                    .then(function (result) {
+                        map.closePopup();
+                    })
+                })
                 /**
                  * visualizzo il div e la popup
                  */
@@ -324,7 +328,7 @@ async function fitget_uscite(value, tipo) {
                         .catch(err => alert("errore"))
                 })
             }
-            fit_itinerario = await get_fit_itinerario(riga_selezionata.data)
+            fit_itinerario = await get_fit_itinerario(riga_selezionata.data.substr(0, 10).toString())
             /**
             * elaborazione completa del markerMoving
             */
