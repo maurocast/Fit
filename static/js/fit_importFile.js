@@ -8,7 +8,7 @@ var _fs = require("./fitget_fs");
 const FitParser = require("fit-file-parser").default;
 
 /** routine richiamata */
-module.exports = { importFile };
+module.exports = { fit_importFile };
 /**
  * Main
  * routine richiamata da menu o da button

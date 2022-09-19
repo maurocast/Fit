@@ -15,7 +15,7 @@ var _fs = require("./fitget_fs");
 var _sql = require("./fitgetpg_sql");
 var _usr = require("./fitget_user");
 var _com = require("./fitget_itinerario");
-var _imp = require("./importFile");
+var _imp = require("./fit_importFile");
 /***
  * creazione del server http
  */
