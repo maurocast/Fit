@@ -9,7 +9,6 @@ async function get_import() {
     */ 
     function get_files_in_directory(pr) {
         return new Promise(async function (resolve, reject){
-
             pr._type = "fs";
             pr._sql = "readdir";
             pr._param = pr._DIRECTORY;
@@ -27,14 +26,13 @@ async function get_import() {
                 filtered = filesDirectory.sort().reverse()
             }
             /**
-             * Tutti i nomidi files elaborati
-             */
-        
+             * Tutti i nomi dei files elaborati
+             */        
             pr._sql = "SELECT file FROM fit_tes";
             pr._type = "SQL_ALL";
             pr._param = [];
             await load(pr)
-                .then(function (result) {
+            .then(function (result) {
                     arResult = []
                     result.forEach(function(i)
                     {
@@ -44,9 +42,8 @@ async function get_import() {
                     filtered = filesDirectory.filter(function (rec) {
                         return !arResult.includes(rec)
                     })
-                })
-                
-            // elimino il parametro con il file singolo per evitare venga rielaborato
+            })
+            /* elimino il parametro con il file singolo per evitare venga rielaborato */
             pr._fileDaElaborare = ""
             /**
              * Contiene l'array di tutti i file da elaborare oppure

@@ -8,7 +8,7 @@ var _fs = require("./fitget_fs");
 const FitParser = require("fit-file-parser").default;
 
 /** routine richiamata */
-module.exports = { fit_importFile };
+module.exports = { importFile };
 /**
  * Main
  * routine richiamata da menu o da button
@@ -45,13 +45,13 @@ async function importFile(pr) {
                         /* Parse your file array in pr._param*/
                         fitParser.parse(pr._param, function (err, result) {
                             if (err) {
-                                console.log("File " + pr._filename + "non convertito da bin.")
+                                console.log("File " + pr._filename + " non convertito da bin.")
                                 reject(err);
                             } else {
                                 /**
                                  * trasformazione riuscita
                                  */
-                                console.log("File " + pr._filename + "convertito da bin. rec. " +
+                                console.log("File " + pr._filename + " convertito da bin. rec. " +
                                     result.records.length);
                                 /**
                                  * 
@@ -150,18 +150,19 @@ async function importFile(pr) {
                 delete fit_tes
                 delete fit_itinerario
                 */
-                pr._sql = "SELECT public.fit_delete_fies('" + pr._data + "')"
+                pr._sql = "SELECT public.fit_delete_files('" + pr._data + "')"
                 pr._param = "";
                 return _sql.fncRUN(pr);
             })
+            /*  scrittura su database fit */
             .then(function () {
-                /*  scrittura su database fit */
                 pr._sql =
                     "INSERT INTO fit (timestamp_key,distance,position_lat,position_long,mil) " +
                     "VALUES(?,?,?,?,?)";
                 pr._param = pr._rows;
                 return _sql.fncRUN(pr);
             })
+            /*  scrittura su database fit_tes */
             .then(function () {
                 pr._sql =
                     "insert INTO fit_tes (data,file,lat,lon,lat_min,lon_min,lat_max,lon_max,tragitto)" +
@@ -171,54 +172,20 @@ async function importFile(pr) {
                 pr._param = pr._data;
                 return _sql.fncRUN(pr);
             })
+            /*  scrittura su database fit - milestones */
             .then(function () {
                 pr._sql = "SELECT public.fit_calculate_milestone('" + pr._data + "')"
                 pr._param = "";
                 return _sql.fncRUN(pr);
             })
-            // milestones
-            .then(function () {
-                /**
-                 * archivio milestone
-                */
-                pr._sql = "SELECT * from fit_itinerario_calculate" + " where data=? order by inizio";
-                pr._param = pr._data;
-                return _sql.fncSQL(pr);
-            })
-            .then(function (result) {
-                pr._rows = result
-                // scrittura nuovi records
-                pr._param = []
-                pr._sql =
-                    "Insert  INTO fit_itinerario (" +
-                    "data,mil_da,mil_a,inizio,fine,km_da,km_a,durata,Km_h,Tp" +
-                    ") values (?,?,?,?,?,?,?,?,?,?)";
-                len = pr._rows.length
-                pr._rows.forEach(function (i, ct) {
-                    if (ct < len - 1 && i.km_da != pr._rows[ct + 1].km_da) {
-                        pr._param.push(Object.values(
-                            [
-                                i.data,
-                                i.mil_da,
-                                (i.mil_a = pr._rows[ct + 1].mil_da),
-                                i.inizio,
-                                (i.fine = pr._rows[ct + 1].inizio),
-                                i.km_da,
-                                (i.km_a = pr._rows[ct + 1].km_da),
-                                (i.durata = (new Date(i.fine) - new Date(i.inizio)) / 1000),
-                                (i.Km_h = (((i.km_a - i.km_da) * 1000) / i.durata) * 3.6),
-                                (i.Tp = ""),
-                            ]
-                        ));
-                    }
-                })
-                return _sql.fncRUN(pr)
+            /*  scrittura su database fit_itinerario */
             .then(function (result) {
                     pr._param = pr._data;
                     pr._sql = "SELECT * from fit_itinerario_w where data=? order by inizio ";
                     return _sql.fncSQL(pr);
 
-                }).then(function (result) {
+            })
+            .then(function (result) {
                     //console.log(result);
                     pr._rows = result
                     // scrittura nuovi records
@@ -231,15 +198,16 @@ async function importFile(pr) {
                         "update fit_tes set tragitto = ? where data=?"
                     pr._param = [[tragitto, pr._data]]
                     return _sql.fncRUN(pr);
-                })// dati finali della promise
-                    .then(function (result) {
+            })// dati finali della promise
+            .then(function (result) {
                         //console.log(result);
                         resolve(result)
-                    })
-                    .catch(function (errorString) { console.log(errorString) })
-                    .finally(function () {
-                        console.log('fine');
-                    });
-            });
-    })
+            })
+            .catch(function (errorString) {
+                console.log(errorString)
+            })
+            .finally(function () {
+                //console.log('fine');
+            });           
+})
 }
