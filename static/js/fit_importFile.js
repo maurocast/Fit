@@ -212,7 +212,7 @@ async function importFile(pr) {
                         ));
                     }
                 })
-                return _sql.fncRUN(pr);
+                return _sql.fncRUN(pr)
             .then(function (result) {
                     pr._param = pr._data;
                     pr._sql = "SELECT * from fit_itinerario_w where data=? order by inizio ";
