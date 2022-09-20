@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# fly.toml file generated for fit on 2022-09-03T20:22:41+02:00
-=======
-# fly.toml file generated for fit on 2022-09-03T17:50:51+02:00
->>>>>>> f5175bc97bdc9c105af7400e3a4c8f7b9e9170f5
+# fly.toml file generated for fit on 2022-09-19T20:28:35+02:00
 
 app = "fit"
 kill_signal = "SIGINT"

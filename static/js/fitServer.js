@@ -2,8 +2,8 @@
         * Server per l'applicazione Fit
         */
 /**
- * moduli dell'applicazione server */
-
+ * moduli dell'applicazione server
+ */
 var http = require('http');
 var url = require('url');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
@@ -209,7 +209,7 @@ var server = http.createServer(function (req, res) {
     }
 })
 /**
- * Assegnazione porta server da file fit.json e esecuzione
+ * assegnazione porta server da file fit.json e esecuzione
  * */
 function EseguiAssegnaPorta(server){
     pr = {}

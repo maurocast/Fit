@@ -17,7 +17,6 @@ async function fitget_uscite(value, tipo) {
     async function get_fit_tes() {
         return new Promise(function (resolve, reject) {
             pr._type = "SQL_ALL";
-            /* order by data desc */
             pr._sql = "select * from get_fit_tes";
             pr._param = [];
             load(pr).
@@ -142,8 +141,7 @@ async function fitget_uscite(value, tipo) {
     *    evento seleziona visualizza la map e tutti i layers 
     *   associati con menu per la scelta
     */ 
-        function selectTableTestata(e) {
-        
+    function selectTableTestata(e) {
         /**
         *   riga relativa alla selezione
         */
@@ -189,11 +187,11 @@ async function fitget_uscite(value, tipo) {
              * @param {*} map 
              * @returns polyline
              */
-            async function get_polyline( map){
+            async function get_polyline(map){
                 return new Promise(function (resolve, reject) {
             /*
                 Creazione polyline vuoto, attivato da layer control
-                */    
+            */    
             polyline = new L.polyline([], { color: "red", })
             /*
                 Click su polyline per attivare la creazione di
@@ -384,7 +382,7 @@ async function fitget_uscite(value, tipo) {
                     /**
                      * altitudine precedente
                      */
-                    if (m.options.dat.altitude >= 300 &&
+                    if (/*m.options.dat.altitude >= 300 &&*/
                         m.options.dat.altitude > altit[ct-1])
                     { m.addTo(dc.layers_uscitamaggiori) }
                     else
@@ -443,7 +441,7 @@ async function fitget_uscite(value, tipo) {
                 groupvuoto = new L.FeatureGroup()
                 var baseMaps = {
                     "Milestones:tutti": dc.layers_uscita,
-                    '    ""     : solo >300 m.': dc.layers_uscitamaggiori,
+                    '    ""     : salite': dc.layers_uscitamaggiori,
                     '    nessun milestone ': groupvuoto,
                 };
                 var overlayMaps = {
@@ -535,8 +533,8 @@ async function fitget_uscite(value, tipo) {
                      */
                     if (event.name == 'Visualizza Itinerario') {
                         polyline.setLatLngs(latlng)
-                        groupLayerPic = new L.FeatureGroup()
-                        async function get_groupLayerPic(latlng) {
+                    //    groupLayerPic = new L.FeatureGroup()
+                    /**    async function get_groupLayerPic(latlng) {
                             return new Promise(function (resolve, reject) {
                                 divisore = parseInt(latlng.length / 10)
                                 y = divisore
@@ -591,9 +589,10 @@ async function fitget_uscite(value, tipo) {
                                 resolve(groupLayerPic)
                             })
                         }
+                         */
                         polyline.addTo(map)
-                        groupLayerPic = await get_groupLayerPic(latlng)
-                        groupLayerPic.addTo(map)
+                    //    groupLayerPic = await get_groupLayerPic(latlng)
+                    //    groupLayerPic.addTo(map)
                     }
                     /**
                      * Visualizzo tutti i milestones
@@ -602,7 +601,7 @@ async function fitget_uscite(value, tipo) {
                         //    dc.layers_uscitaminori.addTo(map)
                         //    dc.layers_uscitamaggiori.addTo(map)
                     }
-                    if (event.name.includes(": solo >300 m.")) {
+                    if (event.name.includes(": salite")) {
                         //        dc.layers_uscitamaggiori.addTo(map)
                         map.removeLayer(dc.layers_uscita)
                     }
@@ -681,7 +680,7 @@ async function fitget_uscite(value, tipo) {
                         //                    map.removeLayer(dc.layers_uscitaminori)
                         //                    map.removeLayer(dc.layers_uscitamaggiori)
                     }
-                    if (event.name.includes(": solo >300 m.")) {
+                    if (event.name.includes(": salite")) {
                         map.removeLayer(dc.layers_uscitaminori)
                     }
                     if (event.name == 'Itinerario') {

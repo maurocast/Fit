@@ -38,5 +38,15 @@
         "fit",
         "5432",
         "false"
+],
+"_pgServerRemote": [
+        "fitpg.internal",
+        "postgres",
+        "4e88c848001ee097705740e6ffde53f3990cfb02a3b0a0c4",
+        "fit",
+        "5432",
+        "false"
+      
 ]
+
 }
